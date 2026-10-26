@@ -1,0 +1,8 @@
+stateDiagram-v2
+    [*] --> PENDING : created (user or auto-control)
+    PENDING --> PUBLISHED : broker ACK
+    PENDING --> FAILED : publish error (503)
+    PENDING --> TIMED_OUT : 5 s deadline or 504
+    PUBLISHED --> TIMED_OUT : 5 s deadline or 504
+    FAILED --> [*]
+    TIMED_OUT --> [*]

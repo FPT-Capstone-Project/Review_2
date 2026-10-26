@@ -1,0 +1,7 @@
+stateDiagram-v2
+    [*] --> UNPAID : order created
+    UNPAID --> PENDING : create payment
+    PENDING --> PAID : payment succeeded
+    PENDING --> FAILED : failed / expired
+    FAILED --> PENDING : retry
+    PAID --> [*]

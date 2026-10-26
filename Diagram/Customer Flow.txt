@@ -1,0 +1,43 @@
+flowchart TD
+    POST["PostLogin"]
+    DASH["Customer Dashboard"]
+
+    ORDER_LIST["My Orders List"]
+    ORDER_DETAIL["Order Details"]
+    ITEMS["Items Info"]
+    PAYMENT["Payment Info"]
+    SHIPMENT["Shipment Info"]
+    PAYOS(("PayOS Checkout"))
+
+    RENTAL_LIST["My Rentals List"]
+    RENTAL_DETAIL["Rental Details"]
+    PROGRESS["Cultivation Progress"]
+    CAMERA["Camera Stream"]
+    SENSOR["Sensor Data"]
+
+    NOTIFICATIONS["Notifications List"]
+
+    POST --> DASH
+
+    DASH --> ORDER_LIST
+    ORDER_LIST --> ORDER_DETAIL
+    ORDER_DETAIL --> ITEMS
+    ORDER_DETAIL --> PAYMENT
+    ORDER_DETAIL --> SHIPMENT
+    ORDER_DETAIL --> PAYOS
+
+    DASH --> RENTAL_LIST
+    RENTAL_LIST --> RENTAL_DETAIL
+    RENTAL_DETAIL --> PROGRESS
+    RENTAL_DETAIL --> CAMERA
+    RENTAL_DETAIL --> SENSOR
+
+    DASH --> NOTIFICATIONS
+
+    classDef dashboard fill:#f5f5f5,stroke:#000000,color:#000000
+    classDef screen fill:#dae8fc,stroke:#6c8ebf,color:#000000
+    classDef popup fill:#ffffff,stroke:#000000,color:#000000
+
+    class DASH dashboard
+    class ORDER_LIST,ORDER_DETAIL,ITEMS,PAYMENT,SHIPMENT,RENTAL_LIST,RENTAL_DETAIL,PROGRESS,CAMERA,SENSOR,NOTIFICATIONS screen
+    class PAYOS popup

@@ -1,0 +1,8 @@
+stateDiagram-v2
+    [*] --> PENDING : order created
+    PENDING --> CANCELLED : cancel
+    PENDING --> CONFIRMED : payment succeeded
+    CONFIRMED --> PROCESSING : startcultivation
+    PROCESSING --> COMPLETED : complete rental
+    COMPLETED --> [*]
+    CANCELLED --> [*]

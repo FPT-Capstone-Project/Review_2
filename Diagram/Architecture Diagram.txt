@@ -1,0 +1,76 @@
+flowchart TB
+    subgraph CLIENT["Presentation Layer"]
+        direction LR
+        WEB["Web Application<br/>React + TypeScript<br/>Vercel"]
+        MOBILE["Mobile Application<br/>React Native + Expo"]
+    end
+
+    subgraph CLOUD["Cloud & Application Layer"]
+        direction TB
+        API["Backend API<br/>Node.js / Render"]
+        DB[("PostgreSQL Database<br/>Supabase")]
+        PAYOS["PayOS<br/>Payment Gateway"]
+        EMQX["EMQX Cloud<br/>MQTT Broker"]
+        IMOU["Imou Cloud<br/>Camera Cloud API"]
+    end
+
+    subgraph HARDWARE["IoT Hardware Layer"]
+        direction TB
+
+        subgraph BUS["RS485 Sensor Network"]
+            direction LR
+            STM1["STM32 Node 1"]
+            STM2["STM32 Node 2"]
+            STM3["STM32 Node 3"]
+            STM4["STM32 Node 4"]
+        end
+
+        MASTER["ESP32 Master<br/>Wi-Fi + MQTT + RS485"]
+
+        SENSORS["Environmental Sensors<br/>Temperature / Humidity / CO2"]
+        ACT["Actuators<br/>Fans / Mist Maker / Heater / Lights / Valves"]
+        CAMERA["IP Camera<br/>Imou Device"]
+    end
+
+    WEB <-->|"HTTPS / REST API"| API
+    MOBILE <-->|"HTTPS / REST API"| API
+
+    API <-->|"SQL / TLS"| DB
+
+    API -->|"Create Payment"| PAYOS
+    PAYOS -->|"Payment Webhook"| API
+
+    STM1 <-->|"RS485"| MASTER
+    STM2 <-->|"RS485"| MASTER
+    STM3 <-->|"RS485"| MASTER
+    STM4 <-->|"RS485"| MASTER
+
+    SENSORS -->|"Sensor Readings"| STM1
+    SENSORS -.->|"Sensor Connections"| STM2
+    SENSORS -.->|"Sensor Connections"| STM3
+    SENSORS -.->|"Sensor Connections"| STM4
+
+    MASTER -->|"MQTT Publish Telemetry"| EMQX
+    EMQX -->|"MQTT Deliver Telemetry<br/>Backend Subscriber"| API
+
+    API -->|"MQTT Publish Commands"| EMQX
+    EMQX -->|"MQTT Deliver Commands<br/>ESP32 Subscriber"| MASTER
+
+    MASTER -->|"GPIO / Driver / SSR"| ACT
+
+    API <-->|"Imou Open API"| IMOU
+    API -->|"Request Live Stream"| IMOU
+    CAMERA -->|"Video Stream"| IMOU
+
+    classDef component fill:#FFFFFF,stroke:#000000,stroke-width:2px,color:#000000;
+    classDef database fill:#FFFFFF,stroke:#000000,stroke-width:2.5px,color:#000000;
+
+    class WEB,MOBILE,API,PAYOS,EMQX,IMOU,MASTER,STM1,STM2,STM3,STM4,SENSORS,ACT,CAMERA component;
+    class DB database;
+
+    style CLIENT fill:#FFFFFF,stroke:#000000,stroke-width:3px,color:#000000
+    style CLOUD fill:#FFFFFF,stroke:#000000,stroke-width:3px,color:#000000
+    style HARDWARE fill:#FFFFFF,stroke:#000000,stroke-width:3px,color:#000000
+    style BUS fill:#FFFFFF,stroke:#000000,stroke-width:2.5px,color:#000000
+
+    linkStyle default stroke:#000000,stroke-width:1.8px;

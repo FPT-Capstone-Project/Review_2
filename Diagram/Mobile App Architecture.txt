@@ -1,0 +1,33 @@
+flowchart TB
+    subgraph APP["Mobile App"]
+        ROOT["app (Expo Router)"]
+        SRC["src/app"]
+
+        subgraph FEATURES["features"]
+            PRESENTATION["presentation"]
+            DOMAIN["domain"]
+            DATA["data"]
+
+            PRESENTATION -.-> DOMAIN
+            DATA -.-> DOMAIN
+        end
+
+        CORE["core"]
+        SHARED["shared"]
+        API["Backend REST API"]
+
+        ROOT -.-> SRC
+        ROOT -.-> FEATURES
+        SRC -.-> FEATURES
+        FEATURES -.-> CORE
+        FEATURES -.-> SHARED
+        CORE -.-> API
+    end
+
+    classDef folder fill:#DCEBFA,stroke:#3973AC,color:#172B4D
+    classDef layer fill:#D9EDE8,stroke:#278578,color:#173D38
+    classDef api fill:#FFF0D5,stroke:#C58B2A,color:#533B12
+
+    class ROOT,SRC,CORE,SHARED folder
+    class PRESENTATION,DOMAIN,DATA layer
+    class API api

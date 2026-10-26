@@ -1,0 +1,28 @@
+flowchart TD
+    HOME["Home Page"]
+    LOGIN["User Login"]
+    POST["PostLogin"]
+    REGISTER["User Register"]
+    OTP(("OTP Verification"))
+    RESET["Forgot / Reset Password"]
+    CHANGE["Change Password"]
+    PROFILE["User Profile"]
+
+    HOME --> LOGIN
+    LOGIN --> POST
+    LOGIN --> REGISTER
+    REGISTER --> OTP
+    OTP --> LOGIN
+
+    LOGIN --> RESET
+    RESET --> LOGIN
+
+    POST --> CHANGE
+    POST --> PROFILE
+
+    classDef public fill:#ffffff,stroke:#000000,color:#0000ff
+    classDef auth fill:#fff2cc,stroke:#000000,color:#0000ff
+    classDef normal fill:#ffffff,stroke:#000000,color:#000000
+    class HOME public
+    class LOGIN,REGISTER,RESET,CHANGE,PROFILE auth
+    class POST normal

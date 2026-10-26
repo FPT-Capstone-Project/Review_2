@@ -1,0 +1,72 @@
+flowchart TB
+    START((Start))
+
+    subgraph CUS["Customer"]
+        direction TB
+        SELECT_TRAY["Select tray<br/>(crop already done)"]
+        BUY_SPAWN{"Plant new spawn?"}
+        SELECT_SPAWN["Select spawn<br/>(mushroom type)"]
+        PAY["Pay via PayOS<br/>(15-minute limit)"]
+        KEEP_TRAY["Keep tray until expiry"]
+    end
+
+    subgraph SYS["System"]
+        direction TB
+        RECEIVE_REQ["Receive request to buy new spawn"]
+        RENTAL_VALID{"Rental still valid?"}
+        TRAY_EMPTY{"Tray has no active crop?"}
+        IN_STOCK{"Spawn in stock?"}
+        ENOUGH_TIME{"Enough time to grow?"}
+        REJECT["Reject and give reason"]
+        CREATE_ORDER["Create order<br/>(linked to rental)"]
+        PAYMENT_OK{"Payment successful?"}
+        CANCEL["Cancel order<br/>(unpaid/expired)"]
+        CREATE_SESSION["Create session on the rented tray"]
+        TRAY_OCCUPIED["Tray occupied<br/>notify customer"]
+        REJECT_END((End))
+        CANCEL_END((End))
+        END((End))
+    end
+
+    subgraph OP["Farm Operator"]
+        direction TB
+        ACCEPT["Accept new request"]
+        ACTIVATE["Activate new crop batch"]
+    end
+
+    START --> SELECT_TRAY
+    SELECT_TRAY --> BUY_SPAWN
+
+    BUY_SPAWN -- No --> KEEP_TRAY
+    KEEP_TRAY --> END
+
+    BUY_SPAWN -- Yes --> SELECT_SPAWN
+    SELECT_SPAWN --> RECEIVE_REQ
+
+    RECEIVE_REQ --> RENTAL_VALID
+
+    RENTAL_VALID -- No --> REJECT
+    RENTAL_VALID -- Yes --> TRAY_EMPTY
+
+    TRAY_EMPTY -- No --> REJECT
+    TRAY_EMPTY -- Yes --> IN_STOCK
+
+    IN_STOCK -- No --> REJECT
+    IN_STOCK -- Yes --> ENOUGH_TIME
+
+    ENOUGH_TIME -- No --> REJECT
+    ENOUGH_TIME -- Yes --> CREATE_ORDER
+
+    REJECT --> REJECT_END
+
+    CREATE_ORDER --> PAY
+    PAY --> PAYMENT_OK
+
+    PAYMENT_OK -- No --> CANCEL
+    CANCEL --> CANCEL_END
+
+    PAYMENT_OK -- Yes --> CREATE_SESSION
+    CREATE_SESSION --> ACCEPT
+    ACCEPT --> ACTIVATE
+    ACTIVATE --> TRAY_OCCUPIED
+    TRAY_OCCUPIED --> END

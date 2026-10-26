@@ -1,0 +1,26 @@
+flowchart TB
+    subgraph WEB["Web Admin"]
+        ROOT["app, routes"]
+        PAGES["pages"]
+        FEATURES["features"]
+        STORES["stores"]
+        API["shared/api"]
+        TYPES["types, i18n"]
+        BACKEND["Backend REST API"]
+
+        ROOT -.-> PAGES
+        ROOT -.-> FEATURES
+        PAGES -.-> STORES
+        PAGES -.-> FEATURES
+        FEATURES -.-> API
+        STORES -.-> API
+        API -.-> BACKEND
+    end
+
+    classDef folder fill:#DCEBFA,stroke:#3973AC,color:#172B4D
+    classDef shared fill:#D9EDE8,stroke:#278578,color:#173D38
+    classDef api fill:#FFF0D5,stroke:#C58B2A,color:#533B12
+
+    class ROOT,PAGES,FEATURES,STORES folder
+    class TYPES shared
+    class API,BACKEND api

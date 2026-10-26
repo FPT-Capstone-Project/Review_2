@@ -1,0 +1,20 @@
+stateDiagram-v2
+    [*] --> DISABLED
+    DISABLED --> IDLE : start
+    IDLE --> ON_REQUESTED : humidity < threshold
+    IDLE --> COOLDOWN : cancel
+    ON_REQUESTED --> MISTING : ON sent
+    MISTING --> OFF_PENDING : pulse deadline or humidity >= max
+    OFF_PENDING --> COOLDOWN : OFF confirmed
+    COOLDOWN --> IDLE
+
+    IDLE --> SENSOR_FAULT : sensor invalid
+    SENSOR_FAULT --> IDLE : recovered
+
+    IDLE --> DEVICE_OFFLINE : MQTT / master offline
+    DEVICE_OFFLINE --> IDLE : recovered
+
+    IDLE --> FAULT : system error
+    FAULT --> IDLE : manual confirm
+
+    IDLE --> DISABLED : stop

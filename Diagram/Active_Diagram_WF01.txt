@@ -1,0 +1,86 @@
+
+flowchart TB
+    START((Start))
+
+    subgraph CUSTOMER["Customer"]
+        LOGIN([Log in])
+        QUANTITY([Select tray quantity])
+        SPAWN([Select spawn type])
+        PAYOS([Open PayOS])
+    end
+
+    subgraph SYSTEM["System"]
+        CHECK_TRAYS([Check remaining trays])
+        ENOUGH_TRAYS{Enough trays?}
+        ASSIGN([Auto-assign tray slots])
+        CHECK_SPAWN([Check spawn stock])
+        ENOUGH_SPAWN{Enough spawn?}
+
+        CREATE_ORDER([Create an order and hold])
+        HOLD_VALID{Paid before hold expires?}
+        CANCEL_HOLD([Cancel hold])
+
+        RECEIVE_WEBHOOK([Receive webhook])
+        VALID_SIGNATURE{Valid signature?}
+        REJECT_WEBHOOK([Reject webhook])
+
+        DUPLICATE{Webhook already processed?}
+        IGNORE_DUPLICATE([Ignore duplicate])
+
+        HOLD_STILL_VALID{Hold still valid?}
+        CAN_FULFIL{Can still fulfil order?}
+
+        CONVERT_RENTAL([Convert hold to rental])
+        NOTIFY([Send notifications])
+        REFUND([Process refund])
+
+        END((End))
+    end
+
+    subgraph PAYMENT["Payment Gateway"]
+        PROCESS_PAYMENT([Process payment])
+    end
+
+    START --> LOGIN
+    LOGIN --> QUANTITY
+    QUANTITY --> CHECK_TRAYS
+    CHECK_TRAYS --> ENOUGH_TRAYS
+
+    ENOUGH_TRAYS -- Yes --> ASSIGN
+    ENOUGH_TRAYS -- No --> QUANTITY
+
+    ASSIGN --> SPAWN
+    SPAWN --> CHECK_SPAWN
+    CHECK_SPAWN --> ENOUGH_SPAWN
+
+    ENOUGH_SPAWN -- Yes --> CREATE_ORDER
+    ENOUGH_SPAWN -- No --> SPAWN
+
+    CREATE_ORDER --> PAYOS
+    PAYOS --> HOLD_VALID
+
+    HOLD_VALID -- Yes --> PROCESS_PAYMENT
+    HOLD_VALID -- No --> CANCEL_HOLD
+    CANCEL_HOLD --> QUANTITY
+
+    PROCESS_PAYMENT --> RECEIVE_WEBHOOK
+    RECEIVE_WEBHOOK --> VALID_SIGNATURE
+
+    VALID_SIGNATURE -- No --> REJECT_WEBHOOK
+    REJECT_WEBHOOK --> END
+
+    VALID_SIGNATURE -- Yes --> DUPLICATE
+    DUPLICATE -- Yes --> IGNORE_DUPLICATE
+    IGNORE_DUPLICATE --> END
+
+    DUPLICATE -- No --> HOLD_STILL_VALID
+
+    HOLD_STILL_VALID -- Yes --> CONVERT_RENTAL
+    HOLD_STILL_VALID -- No --> CAN_FULFIL
+
+    CAN_FULFIL -- Yes --> CONVERT_RENTAL
+    CAN_FULFIL -- No --> REFUND
+
+    CONVERT_RENTAL --> NOTIFY
+    NOTIFY --> END
+    REFUND --> END

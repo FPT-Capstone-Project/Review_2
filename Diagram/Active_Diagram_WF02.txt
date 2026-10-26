@@ -1,0 +1,57 @@
+
+flowchart TB
+    START((Start))
+
+    subgraph OP["Farm Operator"]
+        direction TB
+        RECEIVE([Receive order<br/>(paid, own area)])
+        INSPECT([Inspect spawn<br/>(quality check)])
+        QUALITY{Spawn quality<br/>acceptable?}
+        REJECT([Reject spawn<br/>report issue])
+        REJECT_END(((End)))
+
+        CONFIRM([Confirm tray<br/>(system-assigned)])
+        TRAY_OK{Tray position<br/>usable?}
+        TRAY_ISSUE([Tray issue<br/>request swap])
+        SWAP_END(((End)))
+
+        PLACE([Place spawn<br/>and activate batch])
+        RECORD([Record details<br/>date, photos, notes])
+    end
+
+    subgraph SYS["System"]
+        direction TB
+        TIME_OK{Enough time<br/>per policy?}
+        BLOCK([Block start<br/>policy not met])
+        BLOCK_END(((End)))
+
+        PLANTED([Mark PLANTED<br/>(batch started)])
+        HARVEST_DATE([Set harvest date<br/>(by mushroom type)])
+        NOTIFY([Notify customer<br/>(expected harvest)])
+        END((End))
+    end
+
+    START --> RECEIVE
+    RECEIVE --> INSPECT
+    INSPECT --> QUALITY
+
+    QUALITY -- No --> REJECT
+    REJECT --> REJECT_END
+
+    QUALITY -- Yes --> CONFIRM
+    CONFIRM --> TRAY_OK
+
+    TRAY_OK -- No --> TRAY_ISSUE
+    TRAY_ISSUE --> SWAP_END
+
+    TRAY_OK -- Yes --> TIME_OK
+
+    TIME_OK -- No --> BLOCK
+    BLOCK --> BLOCK_END
+
+    TIME_OK -- Yes --> PLACE
+    PLACE --> RECORD
+    RECORD --> PLANTED
+    PLANTED --> HARVEST_DATE
+    HARVEST_DATE --> NOTIFY
+    NOTIFY --> END

@@ -1,0 +1,12 @@
+stateDiagram-v2
+    [*] --> CONFIRMED : order paid
+    CONFIRMED --> PREPARING : prepare
+    CONFIRMED --> ACTIVE : start cultivation
+    CONFIRMED --> CANCELLED : cancel
+    PREPARING --> ACTIVE : start cultivation
+    PREPARING --> COMPLETED : complete [≥1 harvest]
+    PREPARING --> CANCELLED : cancel
+    ACTIVE --> COMPLETED : complete [≥1 harvest]
+    ACTIVE --> CANCELLED : cancel
+    CANCELLED --> [*]
+    COMPLETED --> [*]

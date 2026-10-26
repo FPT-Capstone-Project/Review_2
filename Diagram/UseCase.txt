@@ -1,0 +1,89 @@
+flowchart LR
+    %% Actors
+    CUS["Customer"]
+    ADM["Administrator"]
+    IOT["IoT System"]
+    PAY["PayOS"]
+    SHP["Shipper"]
+    OPR["Farm Operator"]
+
+    %% System Boundary
+    subgraph SYS["Smart Mushroom Cultivation System"]
+        direction TB
+
+        LOGIN(["Login"])
+
+        %% Customer Use Cases
+        C1(["Browse & Rent Packages"])
+        C2(["Place Order"])
+        C3(["Pay Order"])
+        C4(["Monitor Sensors & Camera"])
+        C5(["Track Shipment"])
+
+        %% Administrator Use Cases
+        A1(["Manage Users & Roles"])
+        A2(["Manage Rooms/Floors/Trays"])
+        A3(["Configure Auto Control"])
+        A4(["Send Notifications"])
+
+        %% IoT Use Cases
+        I1(["Report Sensor Data"])
+        I2(["Auto Misting / Cooling"])
+
+        %% Payment Use Case
+        P1(["Process Payment"])
+
+        %% Shipping Use Case
+        S1(["Update Shipment Status"])
+
+        %% Farm Operator Use Cases
+        O1(["Control Misting (Manual)"])
+        O2(["Update Cultivation Progress"])
+        O3(["Record Harvest"])
+
+        N1(["Send Notifications"])
+    end
+
+    %% Actor Associations
+    CUS --- C1
+    CUS --- C2
+    CUS --- C3
+    CUS --- C4
+    CUS --- C5
+
+    ADM --- A1
+    ADM --- A2
+    ADM --- A3
+    ADM --- A4
+
+    IOT --- I1
+    IOT --- I2
+
+    PAY --- P1
+
+    SHP --- S1
+
+    OPR --- O1
+    OPR --- O2
+    OPR --- O3
+    OPR --- N1
+
+    %% Include Relationships
+    C1 -. "<<include>>" .-> LOGIN
+    C2 -. "<<include>>" .-> LOGIN
+    C3 -. "<<include>>" .-> LOGIN
+    C4 -. "<<include>>" .-> LOGIN
+    C5 -. "<<include>>" .-> LOGIN
+
+    A1 -. "<<include>>" .-> LOGIN
+    A2 -. "<<include>>" .-> LOGIN
+    A3 -. "<<include>>" .-> LOGIN
+    A4 -. "<<include>>" .-> LOGIN
+
+    S1 -. "<<include>>" .-> LOGIN
+    O1 -. "<<include>>" .-> LOGIN
+    O2 -. "<<include>>" .-> LOGIN
+    O3 -. "<<include>>" .-> LOGIN
+    N1 -. "<<include>>" .-> LOGIN
+
+    C3 -. "<<include>>" .-> P1

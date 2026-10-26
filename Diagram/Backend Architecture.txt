@@ -1,0 +1,27 @@
+flowchart TB
+    subgraph BACKEND["Backend"]
+        ROUTES["routes"]
+        MIDDLEWARES["middlewares"]
+        CONTROLLERS["controllers"]
+        SERVICES["services"]
+        MODELS["models"]
+        CONFIG["config, utils"]
+
+        DB[("PostgreSQL")]
+        EXTERNAL["External API"]
+
+        ROUTES -.-> MIDDLEWARES
+        ROUTES -.-> CONTROLLERS
+        CONTROLLERS -.-> SERVICES
+        SERVICES -.-> MODELS
+        SERVICES -.-> EXTERNAL
+        MODELS -.-> DB
+    end
+
+    classDef folder fill:#DCEBFA,stroke:#3973AC,color:#172B4D
+    classDef external fill:#FFF0D5,stroke:#C58B2A,color:#533B12
+    classDef database fill:#E8DDF8,stroke:#8661B5,color:#34234D
+
+    class ROUTES,MIDDLEWARES,CONTROLLERS,SERVICES,MODELS,CONFIG folder
+    class EXTERNAL external
+    class DB database

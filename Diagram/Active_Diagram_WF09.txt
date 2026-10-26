@@ -1,0 +1,50 @@
+flowchart TB
+    START((Start))
+
+    subgraph CUS["Customer"]
+        direction TB
+        CREATE_COMPLAINT["Create complaint<br/>(with photos & details)"]
+    end
+
+    subgraph ADMIN["Admin / Farm Operator"]
+        direction TB
+        VERIFY["Cross-check harvest records,<br/>handover & system data"]
+        EVIDENCE{"Sufficient evidence<br/>& non-duplicate?"}
+        ADD_EVIDENCE["Staff / Customer<br/>provide additional evidence"]
+        DECISION["Admin decision:<br/>Reject / Compensate / Refund"]
+        REFUND_FAIL["Handle exception:<br/>Refund failed (Retry/Manual)"]
+    end
+
+    subgraph SYS["System / Backend"]
+        direction TB
+        WITHIN_24H{"Damaged delivery:<br/>Within 24h window?"}
+        REJECT_24H["Reject complaint<br/>(Exception: Exceeded 24h)"]
+        END_OVERDUE((End))
+        CANCEL_RENTAL["Cancel rental, mark<br/>REFUND_PENDING & save result"]
+        REFUND_SUCCESS{"Refund execution<br/>successful?"}
+        NOTIFY["Notify customer<br/>& close complaint ticket"]
+        END((End))
+    end
+
+    START --> CREATE_COMPLAINT
+    CREATE_COMPLAINT --> WITHIN_24H
+
+    WITHIN_24H -- No --> REJECT_24H
+    REJECT_24H --> END_OVERDUE
+
+    WITHIN_24H -- Yes --> VERIFY
+    VERIFY --> EVIDENCE
+
+    EVIDENCE -- "No / missing" --> ADD_EVIDENCE
+    ADD_EVIDENCE --> VERIFY
+
+    EVIDENCE -- Yes --> DECISION
+    DECISION --> CANCEL_RENTAL
+
+    CANCEL_RENTAL --> REFUND_SUCCESS
+
+    REFUND_SUCCESS -- Yes --> NOTIFY
+    REFUND_SUCCESS -- No --> REFUND_FAIL
+    REFUND_FAIL --> NOTIFY
+
+    NOTIFY --> END

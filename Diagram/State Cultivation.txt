@@ -1,0 +1,8 @@
+stateDiagram-v2
+    [*] --> PENDING : session created
+    PENDING --> IN_PROGRESS : start growing
+    PENDING --> CANCELLED : cancel
+    IN_PROGRESS --> COMPLETED : complete
+    IN_PROGRESS --> CANCELLED : cancel
+    CANCELLED --> [*]
+    COMPLETED --> [*]

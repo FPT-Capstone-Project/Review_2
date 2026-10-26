@@ -1,0 +1,75 @@
+flowchart TB
+    START((Start))
+
+    subgraph OP["Farm Operator"]
+        direction TB
+        INSPECT["Inspect mushroom maturity"]
+        READY["Record photos and confirm harvest readiness"]
+        HARVEST["Harvest, weigh, check quality and pack"]
+        ARRIVAL["Confirm customer arrival and supervise self-harvest"]
+        RECORD["Record actual harvest quantity and quality"]
+        SELF_HARVESTED["Set SELF_HARVESTED"]
+    end
+
+    subgraph SYS["System"]
+        direction TB
+        HARVEST_READY["Set session status: HARVEST_READY"]
+        NOTIFY["Send notification to customer"]
+        DELIVERY_REQ["Create delivery request"]
+        DELIVERY_OK{"Delivery successful?"}
+        FAILURE["Record failure and notify operator"]
+        RETRY{"Retry delivery or change method?"}
+        OVERDUE["Create overdue task and alert operator"]
+        DELIVERED["Record delivery evidence and set DELIVERED"]
+        COMPLETE["Complete cultivation session"]
+        RENTAL_ACTIVE{"Rental still active?"}
+        NEW_SPAWN["Allow new spawn purchase or leave tray empty"]
+        TERMINATE["Start rental termination and tray recovery"]
+        END((End))
+    end
+
+    subgraph CUS["Customer"]
+        direction TB
+        RECEIVE_NOTIFY["Receive harvest notification"]
+        RESPOND{"Respond within deadline?"}
+        METHOD{"Choose handover method"}
+        SELF_BOOK["Book self-harvest appointment"]
+        HOME_DELIVERY["Choose home delivery"]
+        RECEIVE_DELIVERY["Receive delivery and confirm receipt"]
+    end
+
+    START --> INSPECT
+    INSPECT --> READY
+    READY --> HARVEST_READY
+    HARVEST_READY --> NOTIFY
+    NOTIFY --> RECEIVE_NOTIFY
+    RECEIVE_NOTIFY --> RESPOND
+
+    RESPOND -- Yes --> METHOD
+    RESPOND -- No --> OVERDUE
+    OVERDUE --> HARVEST
+
+    METHOD -- "Self-harvest" --> SELF_BOOK
+    SELF_BOOK --> ARRIVAL
+    ARRIVAL --> RECORD
+    RECORD --> SELF_HARVESTED
+    SELF_HARVESTED --> COMPLETE
+
+    METHOD -- "Home delivery" --> HOME_DELIVERY
+    HOME_DELIVERY --> DELIVERY_REQ
+    DELIVERY_REQ --> DELIVERY_OK
+
+    DELIVERY_OK -- Yes --> DELIVERED
+    DELIVERED --> RECEIVE_DELIVERY
+    RECEIVE_DELIVERY --> RECORD
+
+    DELIVERY_OK -- No --> FAILURE
+    FAILURE --> RETRY
+    RETRY -- Yes --> DELIVERY_REQ
+    RETRY -- No --> OVERDUE
+
+    COMPLETE --> RENTAL_ACTIVE
+    RENTAL_ACTIVE -- Yes --> NEW_SPAWN
+    RENTAL_ACTIVE -- No --> TERMINATE
+    NEW_SPAWN --> END
+    TERMINATE --> END

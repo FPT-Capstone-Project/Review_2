@@ -1,0 +1,36 @@
+flowchart TD
+    POST["PostLogin"]
+    DASH["Admin Dashboard"]
+
+    USERS["Users List"] --> USER_DETAIL["User Details"]
+    ROLES["Roles List"] --> ROLE_DETAIL["Role Details"]
+    MUSHROOMS["Mushroom Types List"] --> MUSHROOM_DETAIL["Mushroom Type Details"]
+    PACKAGES["Rental Packages List"] --> PACKAGE_DETAIL["Package Details"]
+    ORDERS["Orders List"] --> ORDER_DETAIL["Order Details"]
+
+    ROOMS["Rooms List"] --> ROOM_DETAIL["Room Details"]
+    ROOM_DETAIL --> FLOORS["Floors"]
+    ROOM_DETAIL --> TRAYS["Trays"]
+    ROOM_DETAIL --> CAMERAS["Cameras"]
+
+    AUTO_LIST["Auto Control List"] --> AUTO_CONFIG["Auto Control Config"]
+    NOTIFICATIONS["Notifications List"] --> SEND(("Send Notification"))
+
+    POST --> DASH
+
+    DASH --> USERS
+    DASH --> ROLES
+    DASH --> MUSHROOMS
+    DASH --> PACKAGES
+    DASH --> ORDERS
+    DASH --> ROOMS
+    DASH --> AUTO_LIST
+    DASH --> NOTIFICATIONS
+
+    classDef dashboard fill:#f5f5f5,stroke:#000000,color:#000000
+    classDef screen fill:#ffe6cc,stroke:#d79b00,color:#000000
+    classDef popup fill:#ffffff,stroke:#000000,color:#000000
+
+    class DASH dashboard
+    class USERS,USER_DETAIL,ROLES,ROLE_DETAIL,MUSHROOMS,MUSHROOM_DETAIL,PACKAGES,PACKAGE_DETAIL,ORDERS,ORDER_DETAIL,ROOMS,ROOM_DETAIL,FLOORS,TRAYS,CAMERAS,AUTO_LIST,AUTO_CONFIG,NOTIFICATIONS screen
+    class SEND popup

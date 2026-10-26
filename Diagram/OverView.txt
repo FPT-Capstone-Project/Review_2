@@ -1,0 +1,43 @@
+flowchart TB
+    %% External Entities
+    ADMIN["Administrator"]
+    OPERATOR["Farm Operator"]
+    CUSTOMER["Customer"]
+    SHIPPER["Shipper"]
+    IOT["ESP32-S3 Master & STM32 RS485 Nodes"]
+    CAMERA["IP Cameras"]
+
+    %% System Boundary
+    MCMS(("Smart Mushroom Cultivation<br/>Management System"))
+
+    %% Administrator
+    ADMIN -->|"System Configuration, User Management"| MCMS
+    MCMS -->|"Global Reports, System Alerts"| ADMIN
+
+    %% Farm Operator
+    OPERATOR -->|"Room/Tray Assign, Device Overrides"| MCMS
+    MCMS -->|"Telemetry Dashboards, Threshold Alerts"| OPERATOR
+
+    %% Customer
+    CUSTOMER -->|"Tray Rental, Package Orders"| MCMS
+    MCMS -->|"Real-time Telemetry, Camera Feed"| CUSTOMER
+
+    %% Shipper
+    SHIPPER -->|"Delivery Status Updates"| MCMS
+    MCMS -->|"Assigned Delivery Orders"| SHIPPER
+
+    %% IoT Hardware
+    IOT -->|"Sensor Readings (Temp, Humidity, CO2)"| MCMS
+    MCMS -->|"Actuator Commands (SSR Misting/Light)"| IOT
+
+    %% Camera
+    CAMERA -->|"Live Video Stream"| MCMS
+
+    %% Styling
+    classDef actor fill:#FAD9D5,stroke:#D0CEE2,stroke-width:2px,color:#1A1A1A;
+    classDef system fill:#FAD9D5,stroke:#D0CEE2,stroke-width:2px,color:#1A1A1A;
+
+    class ADMIN,OPERATOR,CUSTOMER,SHIPPER,IOT,CAMERA actor;
+    class MCMS system;
+
+    linkStyle default stroke:#09555B,stroke-width:2px;

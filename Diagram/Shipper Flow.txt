@@ -1,0 +1,15 @@
+flowchart TD
+    POST["PostLogin"]
+    DASH["Shipper Dashboard"]
+    SHIPMENTS["Shipments List"]
+    DETAILS["Shipment Details"]
+
+    POST --> DASH
+    DASH --> SHIPMENTS
+    SHIPMENTS --> DETAILS
+
+    classDef dashboard fill:#f5f5f5,stroke:#000000,color:#000000
+    classDef screen fill:#e1d5e7,stroke:#9673a6,color:#000000
+
+    class DASH dashboard
+    class SHIPMENTS,DETAILS screen

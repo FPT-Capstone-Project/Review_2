@@ -1,0 +1,32 @@
+flowchart TB
+    ADMIN["Web Admin<br/>React, Vite, Ant Design"]
+    APP["Mobile App<br/>Expo, React Native, Redux"]
+
+    BE["Backend<br/>Node.js, Express, REST, MQTT"]
+
+    DB[("PostgreSQL")]
+    MQTT(["EMQX MQTT"])
+    PAY["PayOS"]
+    CLOUD["Cloudinary"]
+    IMOU["Imou"]
+    GMAIL["Gmail API"]
+
+    ADMIN -.->|"REST API + JWT"| BE
+    APP -.->|"REST API + JWT"| BE
+
+    BE -.-> DB
+    BE -.-> MQTT
+    BE -.-> PAY
+    BE -.-> CLOUD
+    BE -.-> IMOU
+    BE -.-> GMAIL
+
+    classDef frontend fill:#DCEBFA,stroke:#3973AC,color:#172B4D
+    classDef backend fill:#D9EDE8,stroke:#278578,color:#173D38
+    classDef service fill:#FFF0D5,stroke:#C58B2A,color:#533B12
+    classDef database fill:#E8DDF8,stroke:#8661B5,color:#34234D
+
+    class ADMIN,APP frontend
+    class BE backend
+    class DB database
+    class MQTT,PAY,CLOUD,IMOU,GMAIL service
