@@ -71,8 +71,6 @@ CREATE TABLE public.mushroom_conditions (
   temperature_max  NUMERIC,
   humidity_min     NUMERIC,
   humidity_max     NUMERIC,
-  co2_min          NUMERIC,
-  co2_max          NUMERIC,
   created_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_mushroom_conditions_type
